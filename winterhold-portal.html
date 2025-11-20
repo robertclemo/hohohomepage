@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WINTERHOLD PORTAL - CLASSIFIED</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background: #0a0a0a;
+            color: #00ff00;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .classified-banner {
+            background: #ff0000;
+            color: #ffffff;
+            text-align: center;
+            padding: 0.5rem;
+            font-weight: bold;
+            letter-spacing: 2px;
+            border-bottom: 3px solid #ffffff;
+        }
+
+        .header {
+            background: #1a1a1a;
+            border-bottom: 2px solid #00ff00;
+            padding: 1rem 2rem;
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .seal {
+            width: 60px;
+            height: 60px;
+            border: 2px solid #00ff00;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5em;
+            background: #000;
+        }
+
+        .header-text h1 {
+            font-size: 1.2em;
+            color: #00ff00;
+            margin-bottom: 0.2rem;
+        }
+
+        .header-text p {
+            color: #888;
+            font-size: 0.8em;
+        }
+
+        .user-info {
+            text-align: right;
+            font-size: 0.85em;
+        }
+
+        .user-info .username {
+            color: #00ff00;
+            font-weight: bold;
+        }
+
+        .user-info .clearance {
+            color: #ff6666;
+            margin-top: 0.2rem;
+        }
+
+        .main-container {
+            flex: 1;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+            width: 100%;
+        }
+
+        .welcome-box {
+            background: #1a1a1a;
+            border: 2px solid #00ff00;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .welcome-box h2 {
+            color: #00ff00;
+            margin-bottom: 1rem;
+        }
+
+        .system-status {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .status-item {
+            background: #0a0a0a;
+            border: 1px solid #333;
+            padding: 1rem;
+        }
+
+        .status-item .label {
+            color: #888;
+            font-size: 0.8em;
+            margin-bottom: 0.5rem;
+        }
+
+        .status-item .value {
+            color: #00ff00;
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+
+        .status-item .value.warning {
+            color: #ffaa00;
+        }
+
+        .status-item .value.critical {
+            color: #ff0000;
+        }
+
+        .document-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .document-card {
+            background: #1a1a1a;
+            border: 1px solid #333;
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+
+        .document-card:hover {
+            border-color: #00ff00;
+            box-shadow: 0 0 15px rgba(0, 255, 0, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .doc-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .doc-icon {
+            font-size: 2em;
+        }
+
+        .classification {
+            background: #ff0000;
+            color: #fff;
+            padding: 0.2rem 0.5rem;
+            font-size: 0.7em;
+            font-weight: bold;
+        }
+
+        .classification.secret {
+            background: #ff6600;
+        }
+
+        .classification.confidential {
+            background: #ffaa00;
+        }
+
+        .doc-title {
+            color: #00ff00;
+            font-size: 1.1em;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+        }
+
+        .doc-description {
+            color: #888;
+            font-size: 0.85em;
+            line-height: 1.5;
+            margin-bottom: 1rem;
+        }
+
+        .doc-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.75em;
+            color: #666;
+            border-top: 1px solid #333;
+            padding-top: 0.75rem;
+        }
+
+        footer {
+            background: #1a1a1a;
+            border-top: 2px solid #00ff00;
+            padding: 1rem;
+            text-align: center;
+            color: #666;
+            font-size: 0.8em;
+            margin-top: 2rem;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        .blink {
+            animation: blink 1s infinite;
+        }
+
+        .alert-ticker {
+            background: #2a1a1a;
+            border: 1px solid #ff0000;
+            color: #ff6666;
+            padding: 0.75rem;
+            margin-bottom: 2rem;
+            font-size: 0.85em;
+        }
+
+        .alert-ticker strong {
+            color: #ff0000;
+        }
+    </style>
+</head>
+<body>
+    <div class="classified-banner blink">
+        ⚠️ TOP SECRET / SCI - WINTERHOLD CLEARANCE REQUIRED ⚠️
+    </div>
+
+    <div class="header">
+        <div class="header-content">
+            <div class="header-left">
+                <div class="seal">❄️</div>
+                <div class="header-text">
+                    <h1>WINTERHOLD SECURE PORTAL</h1>
+                    <p>Arctic Operations Command - Holiday Defense Department</p>
+                </div>
+            </div>
+            <div class="user-info">
+                <div class="username">CLAUS.GS15@WINTERHOLD.MIL</div>
+                <div class="clearance">CLEARANCE LEVEL: 5 (TOP SECRET/SCI)</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="main-container">
+        <div class="welcome-box">
+            <h2>WELCOME TO WINTERHOLD OPERATIONS CENTER</h2>
+            <p style="color: #888; margin-bottom: 1rem;">
+                Current Date: <span style="color: #00ff00;">2024-12-20</span> | 
+                Local Time: <span style="color: #00ff00;">23:47:23 UTC</span> | 
+                Session ID: <span style="color: #666;">WH-5849-ALPHA</span>
+            </p>
+
+            <div class="system-status">
+                <div class="status-item">
+                    <div class="label">REINDEER FLEET STATUS</div>
+                    <div class="value">87% OPERATIONAL</div>
+                </div>
+                <div class="status-item">
+                    <div class="label">ELF WORKFORCE</div>
+                    <div class="value warning">15,842 ACTIVE</div>
+                </div>
+                <div class="status-item">
+                    <div class="label">TOY PRODUCTION QUOTA</div>
+                    <div class="value">89.3% COMPLETE</div>
+                </div>
+                <div class="status-item">
+                    <div class="label">KRAMPUS THREAT LEVEL</div>
+                    <div class="value critical">ELEVATED</div>
+                </div>
+                <div class="status-item">
+                    <div class="label">NAUGHTY LIST ENTRIES</div>
+                    <div class="value">2,847,592</div>
+                </div>
+                <div class="status-item">
+                    <div class="label">SLEIGH DEPLOYMENT</div>
+                    <div class="value">T-4 DAYS 13 HRS</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="alert-ticker">
+            <strong>⚠️ SYSTEM ALERT:</strong> Unauthorized access detected on civilian network segment. 
+            Security protocol SNOWFALL-7 activated. All personnel advised to verify credentials and report suspicious activity.
+        </div>
+
+        <h2 style="color: #00ff00; margin-bottom: 1rem; font-size: 1.3em;">📁 CLASSIFIED DOCUMENT REPOSITORY</h2>
+
+        <div class="document-grid">
+            <a href="project-krampus.html" class="document-card">
+                <div class="doc-header">
+                    <div class="doc-icon">⚔️</div>
+                    <div class="classification">TOP SECRET</div>
+                </div>
+                <div class="doc-title">PROJECT KRAMPUS</div>
+                <div class="doc-description">
+                    Anti-Krampus weapons systems development and tactical deployment protocols. 
+                    Includes schematics for HOARFROST-class defensive platforms and TINSEL-7 munitions.
+                </div>
+                <div class="doc-meta">
+                    <span>DOC-ID: WH-2024-K-088</span>
+                    <span>UPDATED: 2024-12-15</span>
+                </div>
+            </a>
+
+            <a href="reindeer-genetics.html" class="document-card">
+                <div class="doc-header">
+                    <div class="doc-icon">🧬</div>
+                    <div class="classification">TOP SECRET</div>
+                </div>
+                <div class="doc-title">REINDEER ENHANCEMENT PROGRAM</div>
+                <div class="doc-description">
+                    Genetic modification protocols for reindeer flight capabilities, bioluminescent nose research, 
+                    and performance enhancement drug trials. Subject R-001 "RUDOLPH" case study included.
+                </div>
+                <div class="doc-meta">
+                    <span>DOC-ID: WH-2024-R-234</span>
+                    <span>UPDATED: 2024-12-18</span>
+                </div>
+            </a>
+
+            <a href="elf-facilities.html" class="document-card">
+                <div class="doc-header">
+                    <div class="doc-icon">🏭</div>
+                    <div class="classification secret">SECRET</div>
+                </div>
+                <div class="doc-title">ELF RE-EDUCATION FACILITIES</div>
+                <div class="doc-description">
+                    Workforce compliance centers, behavioral modification programs, and productivity 
+                    enhancement protocols. Includes Site-7 "Workshop Gamma" operational reports.
+                </div>
+                <div class="doc-meta">
+                    <span>DOC-ID: WH-2024-E-456</span>
+                    <span>UPDATED: 2024-12-19</span>
+                </div>
+            </a>
+
+            <a href="list-algorithm.html" class="document-card">
+                <div class="doc-header">
+                    <div class="doc-icon">📊</div>
+                    <div class="classification">TOP SECRET</div>
+                </div>
+                <div class="doc-title">THE LIST - ALGORITHM DOCUMENTATION</div>
+                <div class="doc-description">
+                    Naughty/Nice classification algorithm v8.2. Predictive behavioral analysis, 
+                    surveillance integration protocols, and social credit scoring methodology.
+                </div>
+                <div class="doc-meta">
+                    <span>DOC-ID: WH-2024-L-777</span>
+                    <span>UPDATED: 2024-12-10</span>
+                </div>
+            </a>
+
+            <a href="sleigh-technology.html" class="document-card">
+                <div class="doc-header">
+                    <div class="doc-icon">🚀</div>
+                    <div class="classification secret">SECRET</div>
+                </div>
+                <div class="doc-title">SLEIGH PROPULSION SYSTEMS</div>
+                <div class="doc-description">
+                    Advanced propulsion technology, temporal manipulation drives, and dimensional 
+                    transit capabilities. Project DASHER technical specifications and test flight logs.
+                </div>
+                <div class="doc-meta">
+                    <span>DOC-ID: WH-2024-S-912</span>
+                    <span>UPDATED: 2024-12-12</span>
+                </div>
+            </a>
+
+            <a href="surveillance-network.html" class="document-card">
+                <div class="doc-header">
+                    <div class="doc-icon">📡</div>
+                    <div class="classification">TOP SECRET</div>
+                </div>
+                <div class="doc-title">GLOBAL SURVEILLANCE NETWORK</div>
+                <div class="doc-description">
+                    "He sees you when you're sleeping" - PRISM-SNOW monitoring systems, 
+                    IoT device exploitation, and behavioral tracking infrastructure documentation.
+                </div>
+                <div class="doc-meta">
+                    <span>DOC-ID: WH-2024-G-333</span>
+                    <span>UPDATED: 2024-12-17</span>
+                </div>
+            </a>
+
+            <a href="incident-reports.html" class="document-card">
+                <div class="doc-header">
+                    <div class="doc-icon">⚠️</div>
+                    <div class="classification confidential">CONFIDENTIAL</div>
+                </div>
+                <div class="doc-title">INCIDENT REPORTS - 2024</div>
+                <div class="doc-description">
+                    Elf uprising suppression, civilian exposure incidents, reindeer escape attempts, 
+                    and containment breach logs. Redacted for operational security.
+                </div>
+                <div class="doc-meta">
+                    <span>DOC-ID: WH-2024-I-555</span>
+                    <span>UPDATED: 2024-12-20</span>
+                </div>
+            </a>
+
+            <a href="mrs-claus-emails.html" class="document-card">
+                <div class="doc-header">
+                    <div class="doc-icon">📧</div>
+                    <div class="classification confidential">CONFIDENTIAL</div>
+                </div>
+                <div class="doc-title">INTERCEPTED COMMUNICATIONS</div>
+                <div class="doc-description">
+                    Mrs. Claus email archives recovered from cougar_at_the_pole@workshop.com and 
+                    rudolphs_nose_polisher@northpole.com. HR investigation pending.
+                </div>
+                <div class="doc-meta">
+                    <span>DOC-ID: WH-2024-C-069</span>
+                    <span>UPDATED: 2024-12-16</span>
+                </div>
+            </a>
+
+            <a href="toy-weaponization.html" class="document-card">
+                <div class="doc-header">
+                    <div class="doc-icon">🎁</div>
+                    <div class="classification">TOP SECRET</div>
+                </div>
+                <div class="doc-title">TOY WEAPONIZATION PROGRAM</div>
+                <div class="doc-description">
+                    Dual-use technology integration in civilian toys, surveillance device miniaturization, 
+                    and Project TROJAN HORSE deployment strategies for contested territories.
+                </div>
+                <div class="doc-meta">
+                    <span>DOC-ID: WH-2024-T-424</span>
+                    <span>UPDATED: 2024-12-14</span>
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <footer>
+        <p>WINTERHOLD MILITARY INSTALLATION | 90° 0' 0" N | ARCTIC OPERATIONS COMMAND</p>
+        <p>This system is for authorized use only. All activity is monitored and logged.</p>
+        <p style="margin-top: 0.5rem; color: #444;">
+            Report security incidents to: <span style="color: #666;">security@winterhold.mil</span>
+        </p>
+    </footer>
+
+    <script>
+        // Add some ambient effects
+        console.log('%cWINTERHOLD SECURE PORTAL', 'color: #00ff00; font-size: 24px; font-weight: bold;');
+        console.log('%cSession authenticated. Access granted.', 'color: #00ff00; font-size: 14px;');
+        
+        // Update time every second
+        setInterval(() => {
+            const now = new Date();
+            const timeStr = now.toISOString().split('T')[1].split('.')[0] + ' UTC';
+            document.querySelector('.welcome-box p span:nth-child(2)').textContent = timeStr;
+        }, 1000);
+    </script>
+</body>
+</html>
